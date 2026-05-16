@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>家づくりで後悔しないチェックリスト20｜それでも家を建てた、アラサー会社員の話</title>
+  <meta name="description" content="アラサー施主が本当に確認してほしい20のチェックポイント。住宅ローン・工務店選び・性能・間取りを網羅。">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:           #f7f5f2;
+      --surface:      #ffffff;
+      --surface2:     #f2f0ec;
+      --primary:      #b87728;
+      --primary-dark: #9a6320;
+      --primary-light: rgba(184,119,40,0.10);
+      --text:         #2a2420;
+      --text-sub:     #5c5450;
+      --muted:        #9a948e;
+      --border:       #dedad4;
+      --success:      #3a9e68;
+      --radius-sm:    8px;
+      --radius-md:    14px;
+      --radius-lg:    20px;
+      --radius-full:  100px;
+      --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ヘッダー */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .header-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c8852a, #8a5a1a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; flex-shrink: 0;
+    }
+
+    .header-name {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      font-weight: 500;
+    }
+
+    /* ヒーロー */
+    .hero {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 1.25rem 1.75rem;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary-light);
+      border: 1px solid rgba(184,119,40,0.25);
+      color: var(--primary-dark);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.28rem 0.8rem;
+      border-radius: var(--radius-full);
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.25rem, 4.5vw, 1.7rem);
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--primary);
+    }
+
+    .hero p {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+    }
+
+    /* 進捗カウンター */
+    .counter-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .counter-text {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .counter-text strong {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 5px;
+      background: var(--border);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      border-radius: var(--radius-full);
+      width: 0%;
+      transition: width 350ms var(--ease);
+    }
+
+    /* コンテンツ */
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 5rem;
+    }
+
+    /* カテゴリ */
+    .category {
+      margin-bottom: 1.5rem;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .category-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .category-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .category-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* チェック項目 */
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      transition: border-color 150ms var(--ease), background 150ms;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .check-item:hover { background: var(--surface2); }
+
+    .check-item.checked {
+      border-color: var(--success);
+      background: rgba(58,158,104,0.06);
+    }
+
+    .check-box {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 5px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 150ms, background 150ms;
+      background: var(--surface);
+    }
+
+    .check-item.checked .check-box {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .check-mark {
+      display: none;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .check-item.checked .check-mark { display: block; }
+
+    .check-num {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      flex-shrink: 0;
+      width: 1.2rem;
+      margin-top: 2px;
+      text-align: right;
+    }
+
+    .check-item.checked .check-num { color: var(--success); }
+
+    .check-text {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      flex: 1;
+      transition: color 150ms;
+    }
+
+    .check-item.checked .check-text {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* 完了バナー */
+    .complete-banner {
+      display: none;
+      background: linear-gradient(135deg, rgba(58,158,104,0.12), rgba(58,158,104,0.05));
+      border: 1.5px solid rgba(58,158,104,0.3);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 400ms var(--ease) both;
+    }
+
+    .complete-banner .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .complete-banner h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--success); }
+    .complete-banner p { font-size: 0.83rem; color: var(--text-sub); }
+
+    /* CTAカード */
+    .cta-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .cta-card p {
+      font-size: 0.875rem;
+      color: var(--text-sub);
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-consult {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(184,119,40,0.3);
+      transition: box-shadow 180ms, transform 120ms;
+    }
+
+    .btn-consult:hover {
+      box-shadow: 0 6px 22px rgba(184,119,40,0.4);
+      transform: translateY(-1px);
+    }
+
+    /* リセットボタン */
+    .btn-reset {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      font-family: inherit;
+    }
+
+    .btn-reset:hover { color: var(--text-sub); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 印刷スタイル */
+    @media print {
+      .counter-bar, .btn-consult, .btn-reset, .cta-card { display: none; }
+      .check-item { border-color: #ccc; break-inside: avoid; }
+      .hero { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-icon">🏠</div>
+    <span class="header-name">それでも家を建てた、アラサー会社員の話</span>
+  </header>
+
+  <section class="hero">
+    <span class="badge">🎁 登録者限定</span>
+    <h1>家づくりで後悔しない<br><em>チェックリスト20</em></h1>
+    <p>アラサー施主が本当に確認してほしい20のポイント<br>タップしてチェックしながら読んでください</p>
+  </section>
+
+  <div class="counter-bar">
+    <div class="counter-text"><strong id="checkedCount">0</strong> / 20 完了</div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <main class="container">
+
+    <!-- 全完了バナー -->
+    <div class="complete-banner" id="completeBanner">
+      <div class="icon">🎉</div>
+      <h3>全項目クリア！</h3>
+      <p>家づくりの準備が整っています。<br>不安な項目があれば、気軽に相談してください。</p>
+    </div>
+
+    <!-- カテゴリ1：お金・住宅ローン -->
+    <div class="category">
+      <div class="category-header">
+        <span class="category-icon">💰</span>
+        <span class="category-title">お金・住宅ローン</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="check-list">
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">1</span>
+          <span class="check-text">月々の返済額だけでなく「総返済額」を計算したか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">2</span>
+          <span class="check-text">変動・固定金利のリスクを自分の収入安定度と照らして考えたか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">3</span>
+          <span class="check-text">頭金の額が生活防衛資金を削っていないか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">4</span>
+          <span class="check-text">諸費用（登記・火災保険・引越し等）を予算に含めたか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">5</span>
+          <span class="check-text">住宅ローン控除の条件・上限を把握しているか</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- カテゴリ2：工務店・HM選び -->
+    <div class="category">
+      <div class="category-header">
+        <span class="category-icon">🏗️</span>
+        <span class="category-title">工務店・ハウスメーカー選び</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="check-list">
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">6</span>
+          <span class="check-text">複数社（最低3社）から見積もりを取ったか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">7</span>
+          <span class="check-text">施工実績・OB施主の感想を確認したか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">8</span>
+          <span class="check-text">アフターサービスの内容・保証期間を比較したか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">9</span>
+          <span class="check-text">担当者との相性・レスポンスの速さを確認したか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">10</span>
+          <span class="check-text">坪単価に「含まれるもの・含まれないもの」を確認したか</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- カテゴリ3：性能 -->
+    <div class="category">
+      <div class="category-header">
+        <span class="category-icon">🔬</span>
+        <span class="category-title">建物の性能</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="check-list">
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">11</span>
+          <span class="check-text">断熱性能（UA値）の基準を知っているか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">12</span>
+          <span class="check-text">気密性能（C値）の測定を依頼できるか確認したか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">13</span>
+          <span class="check-text">耐震等級3を取得・取得可能か確認したか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">14</span>
+          <span class="check-text">24時間換気システムの種類（1種・3種）を把握したか</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- カテゴリ4：間取り -->
+    <div class="category">
+      <div class="category-header">
+        <span class="category-icon">📐</span>
+        <span class="category-title">間取り</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="check-list">
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">15</span>
+          <span class="check-text">日当たり・風通しをシミュレーションしたか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">16</span>
+          <span class="check-text">収納の量・位置を家族の動線で検討したか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">17</span>
+          <span class="check-text">将来の家族変化（子ども部屋・在宅勤務等）を想定したか</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- カテゴリ5：最終確認 -->
+    <div class="category">
+      <div class="category-header">
+        <span class="category-icon">✅</span>
+        <span class="category-title">後悔しないための最終確認</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="check-list">
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">18</span>
+          <span class="check-text">「予算を抑えること」を優先して性能を妥協していないか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">19</span>
+          <span class="check-text">打ち合わせ内容をメモ・議事録で記録しているか</span>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="check-num">20</span>
+          <span class="check-text">「なんとなく決めた」ものが1つもないか、全項目に理由を言えるか</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTAカード -->
+    <div class="cta-card">
+      <p>
+        チェックできなかった項目はありましたか？<br>
+        不安な点があれば、施主目線で一緒に整理します。<br>
+        売り込みは一切しません。気軽にどうぞ。
+      </p>
+      <a class="btn-consult" href="https://ie-wo-tateta.github.io/soredemo-ie/line-survey.html">
+        <span>📝 無料で相談してみる</span>
+        <span>→</span>
+      </a>
+    </div>
+
+    <button class="btn-reset" onclick="resetAll()">チェックをリセットする</button>
+
+  </main>
+
+  <script>
+    const TOTAL = 20;
+    let checkedCount = 0;
+
+    function toggle(el) {
+      const wasChecked = el.classList.contains('checked');
+      el.classList.toggle('checked');
+      checkedCount += wasChecked ? -1 : 1;
+      updateProgress();
+    }
+
+    function updateProgress() {
+      document.getElementById('checkedCount').textContent = checkedCount;
+      document.getElementById('progressFill').style.width = (checkedCount / TOTAL * 100) + '%';
+      document.getElementById('completeBanner').style.display =
+        checkedCount === TOTAL ? 'block' : 'none';
+    }
+
+    function resetAll() {
+      document.querySelectorAll('.check-item.checked').forEach(el => el.classList.remove('checked'));
+      checkedCount = 0;
+      updateProgress();
+    }
+  </script>
+
+</body>
+</html>

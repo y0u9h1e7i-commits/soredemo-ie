@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>家づくり相談フォーム｜それでも家を建てた、アラサー会社員の話</title>
+  <meta name="description" content="施主目線で状況を整理します。約2分で完了します。">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:           #f7f5f2;
+      --surface:      #ffffff;
+      --surface2:     #f2f0ec;
+      --primary:      #b87728;
+      --primary-dark: #9a6320;
+      --primary-light: rgba(184,119,40,0.10);
+      --text:         #2a2420;
+      --text-sub:     #5c5450;
+      --muted:        #9a948e;
+      --border:       #dedad4;
+      --success:      #3a9e68;
+      --error:        #d94f3a;
+      --radius-sm:    8px;
+      --radius-md:    14px;
+      --radius-lg:    20px;
+      --radius-full:  100px;
+      --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== 画面制御 ===== */
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .screen.active { display: flex; }
+
+    /* ===== ヘッダー ===== */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.875rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-shrink: 0;
+    }
+    .header-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c8852a, #8a5a1a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; flex-shrink: 0;
+    }
+    .header-name {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    /* ===== プログレスバー ===== */
+    .progress-wrap {
+      background: var(--surface);
+      padding: 0.55rem 1.25rem 0.7rem;
+      flex-shrink: 0;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .progress-track {
+      height: 4px;
+      background: var(--border);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      border-radius: var(--radius-full);
+      transition: width 380ms var(--ease);
+    }
+
+    /* ===== 本文 ===== */
+    .body {
+      flex: 1;
+      padding: 1.5rem 1.25rem 1rem;
+      overflow-y: auto;
+    }
+
+    /* ===== 吹き出し ===== */
+    .bubble-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .bubble-icon {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c8852a, #8a5a1a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0; margin-top: 2px;
+    }
+    .bubble {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+      padding: 0.875rem 1rem;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: var(--text);
+      max-width: calc(100% - 46px);
+      box-shadow: 0 1px 4px rgba(60,40,20,0.06);
+    }
+    .bubble strong { color: var(--primary-dark); }
+
+    /* ===== 質問ラベル ===== */
+    .question-label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+      line-height: 1.5;
+    }
+    .question-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* ===== 選択肢 ===== */
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .choice-btn {
+      width: 100%;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.8rem 1rem;
+      font-family: inherit;
+      font-size: 0.875rem;
+      color: var(--text-sub);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 140ms var(--ease), background 140ms, color 140ms, transform 80ms;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      line-height: 1.4;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .choice-btn::before {
+      content: '';
+      width: 17px; height: 17px;
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: border-color 140ms, background 140ms;
+    }
+    .choice-btn:hover {
+      border-color: rgba(184,119,40,0.4);
+      background: var(--primary-light);
+      color: var(--text);
+    }
+    .choice-btn.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--text);
+      font-weight: 500;
+    }
+    .choice-btn.selected::before {
+      background: var(--primary);
+      border-color: var(--primary);
+      box-shadow: inset 0 0 0 3px #fff;
+    }
+    /* 複数選択（チェックボックス型） */
+    .choice-btn.multi::before { border-radius: 4px; }
+    .choice-btn.multi.selected::before {
+      background: var(--primary);
+      border-color: var(--primary);
+      box-shadow: inset 0 0 0 0 transparent;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .choice-btn:active { transform: scale(0.98); }
+
+    /* ===== セレクトボックス ===== */
+    select.pref-select {
+      width: 100%;
+      padding: 0.8rem 2.25rem 0.8rem 1rem;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text);
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%239a948e' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.85rem center;
+      cursor: pointer;
+      transition: border-color 140ms var(--ease), box-shadow 140ms;
+    }
+    select.pref-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    /* ===== テキスト入力 ===== */
+    .text-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: border-color 140ms var(--ease), box-shadow 140ms;
+      -webkit-appearance: none;
+    }
+    .text-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    .text-input::placeholder { color: var(--muted); }
+    .text-input.invalid { border-color: var(--error); }
+
+    textarea.text-input {
+      resize: none;
+      min-height: 100px;
+      line-height: 1.7;
+    }
+
+    .input-group { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    /* その他の自由記述 */
+    .other-wrap {
+      display: none;
+      margin-top: 0.5rem;
+    }
+    .other-wrap.visible { display: block; }
+
+    /* エラー */
+    .field-error {
+      font-size: 0.77rem;
+      color: var(--error);
+      margin-top: 0.35rem;
+      display: none;
+    }
+
+    /* ===== フッター ===== */
+    .footer {
+      padding: 0.875rem 1.25rem calc(0.875rem + env(safe-area-inset-bottom));
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .btn-next {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: opacity 160ms, transform 100ms var(--ease), box-shadow 160ms;
+      box-shadow: 0 4px 16px rgba(184,119,40,0.32);
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-next:disabled { opacity: 0.38; cursor: not-allowed; box-shadow: none; }
+    .btn-next:not(:disabled):hover { box-shadow: 0 6px 22px rgba(184,119,40,0.44); transform: translateY(-1px); }
+    .btn-next:not(:disabled):active { transform: scale(0.98); }
+
+    /* ===== 完了画面 ===== */
+    .complete-body {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    .complete-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(58,158,104,0.15), rgba(58,158,104,0.06));
+      border: 1.5px solid rgba(58,158,104,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin-bottom: 1.5rem;
+    }
+    .complete-body h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .complete-body p { font-size: 0.875rem; color: var(--text-sub); line-height: 1.8; margin-bottom: 1.75rem; }
+    .btn-cta {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-family: inherit; font-size: 0.9rem; font-weight: 700;
+      padding: 0.875rem 1.5rem;
+      border: none; border-radius: var(--radius-full);
+      cursor: pointer; text-decoration: none;
+      box-shadow: 0 4px 16px rgba(184,119,40,0.32);
+    }
+
+    /* ===== フェードイン ===== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .screen.active .body > * { animation: fadeUp 260ms var(--ease) both; }
+    .screen.active .body > *:nth-child(2) { animation-delay: 50ms; }
+    .screen.active .body > *:nth-child(3) { animation-delay: 100ms; }
+  </style>
+</head>
+<body>
+
+  <!-- ========== STEP 0：ウェルカム ========== -->
+  <div class="screen active" id="screen-0">
+    <div class="header">
+      <div class="header-icon">🏠</div>
+      <div class="header-name">それでも家を建てた、<br>アラサー会社員の話</div>
+    </div>
+    <div class="body">
+      <div class="bubble-wrap">
+        <div class="bubble-icon">🏠</div>
+        <div class="bubble">
+          登録ありがとうございます！<br><br>
+          施主目線で家づくりの判断基準を発信している、アラサー会社員です。<br><br>
+          <strong>かんたんなアンケート（全8問・約2分）</strong>にお答えください。<br><br>
+          回答後に<strong>「家づくりで後悔しないチェックリスト20」</strong>をプレゼントします🎁
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="btn-next" onclick="goTo(1)">はじめる →</button>
+    </div>
+  </div>
+
+  <!-- ========== STEP 1：検討段階 ========== -->
+  <div class="screen" id="screen-1">
+    <div class="header">
+      <div class="header-icon">🏠</div>
+      <div class="header-name">それでも家を建てた、<br>アラサー会社員の話</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>1 / 8</span><span>13%</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:13%"></div></div>
+    </div>
+    <div class="body">
+      <p class="question-label">今、家づくりのどの段階ですか？</p>
+      <div class="choices">
+        <button class="choice-btn" data-key="status" data-val="情報収集中" onclick="pick(this,'btn-1')">まだ情報収集している段階</button>
+        <button class="choice-btn" data-key="status" data-val="展示場・見学会に行ったことがある" onclick="pick(this,'btn-1')">展示場や見学会に行ったことがある</button>
+        <button class="choice-btn" data-key="status" data-val="複数社と比較中" onclick="pick(this,'btn-1')">複数の工務店・ハウスメーカーと話している</button>
+        <button class="choice-btn" data-key="status" data-val="6ヶ月以内に動きたい" onclick="pick(this,'btn-1')">6ヶ月以内には動き出したい</button>
+        <button class="choice-btn" data-key="status" data-val="まだ先の話" onclick="pick(this,'btn-1')">まだ1〜2年先の話</button>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="btn-next" id="btn-1" disabled onclick="goTo(2)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== STEP 2：エリア ========== -->
+  <div class="screen" id="screen-2">
+    <div class="header">
+      <div class="header-icon">🏠</div>
+      <div class="header-name">それでも家を建てた、<br>アラサー会社員の話</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>2 / 8</span><span>25%</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:25%"></div></div>
+    </div>
+    <div class="body">
+      <p class="question-label">お住まいの都道府県は？</p>
+      <select class="pref-select" id="pref-select" onchange="onPref()">
+        <option value="">選択してください</option>
+        <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option>
+        <option>秋田県</option><option>山形県</option><option>福島県</option><option>茨城県</option>
+        <option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option>
+        <option>東京都</option><option>神奈川県</option><option>新潟県</option><option>富山県</option>
+        <option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option>
+        <option>岐阜県</option><option>静岡県</option><option>愛知県</option><option>三重県</option>
+        <option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option>
+        <option>奈良県</option><option>和歌山県</option><option>鳥取県</option><option>島根県</option>
+        <option>岡山県</option><option>広島県</option><option>山口県</option><option>徳島県</option>
+        <option>香川県</option><option>愛媛県</option><option>高知県</option><option>福岡県</option>
+        <option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option>
+        <option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
+      </select>
+    </div>
+    <div class="footer">
+      <button class="btn-next" id="btn-2" disabled onclick="goTo(3)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== STEP 3：世帯構成 ========== -->
+  <div class="screen" id="screen-3">
+    <div class="header">
+      <div class="header-icon">🏠</div>
+      <div class="header-name">それでも家を建てた、<br>アラサー会社員の話</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>3 / 8</span><span>38%</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:38%"></div></div>
+    </div>
+    <div class="body">
+      <p class="question-label">世帯構成を教えてください</p>
+      <div class="choices">
+        <button class="choice-btn" data-key="family" data-val="夫婦のみ" onclick="pick(this,'btn-3')">夫婦のみ</button>
+        <button class="choice-btn" data-key="family" data-val="夫婦＋子ども1人" onclick="pick(this,'btn-3')">夫婦＋子ども1人</button>
+        <button class="choice-btn" data-key="family" data-val="夫婦＋子ども2人以上" onclick="pick(this,'btn-3')">夫婦＋子ども2人以上</button>
+        <button class="choice-btn" data-key="family" data-val="その他" id="familyOtherBtn" onclick="pick(this,'btn-3'); toggleOther('familyOtherWrap', this)">その他</button>
+      </div>
+      <div class="other-wrap" id="familyOtherWrap">
+        <input type="text" class="text-input" id="familyOtherText" placeholder="例：親と同居、単身、パートナーと2人など" maxlength="60" oninput="onFamilyOther()">
+      </div>
+    </div>
+    <div class="footer">
+      <button class="btn-next" id="btn-3" disabled onclick="goTo(4)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== STEP 4：建物予算 ========== -->
+  <div class="screen" id="screen-4">
+    <div class="header">
+      <div class="header-icon">🏠</div>
+      <div class="header-name">それでも家を建てた、<br>アラサー会社員の話</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>4 / 8</span><span>50%</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:50%"></div></div>
+    </div>
+    <div class="body">
+      <p class="question-label">建物予算の目安は？</p>
+      <span class="question-note">土地代を除く・税込</span>
+      <div class="choices">
+        <button class="choice-btn" data-key="budget" data-val="〜2000万円" onclick="pick(this,'btn-4')">〜2,000万円</button>
+        <button class="choice-btn" data-key="budget" data-val="2000〜2500万円" onclick="pick(this,'btn-4')">2,000〜2,500万円</button>
+        <button class="choice-btn" data-key="budget" data-val="2500〜3000万円" onclick="pick(this,'btn-4')">2,500〜3,000万円</button>
+        <button class="choice-btn" data-key="budget" data-val="3000〜3500万円" onclick="pick(this,'btn-4')">3,000〜3,500万円</button>
+        <button class="choice-btn" data-key="budget" data-val="3500万円〜" onclick="pick(this,'btn-4')">3,500万円〜</button>
+        <button class="choice-btn" data-key="budget" data-val="まだわからない" onclick="pick(this,'btn-4')">まだわからない</button>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="btn-next" id="btn-4" disabled onclick="goTo(5)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== STEP 5：住宅ローン ========== -->
+  <div class="screen" id="screen-5">
+    <div class="header">
+      <div class="header-icon">🏠</div>
+      <div class="header-name">それでも家を建てた、<br>アラサー会社員の話</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>5 / 8</span><span>63%</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:63%"></div></div>
+    </div>
+    <div class="body">
+      <p class="question-label">住宅ローンの状況は？</p>
+      <div class="choices">
+        <button class="choice-btn" data-key="loan" data-val="まだ何も調べていない" onclick="pick(this,'btn-5')">まだ何も調べていない</button>
+        <button class="choice-btn" data-key="loan" data-val="調べているが審査未申込" onclick="pick(this,'btn-5')">調べているが審査は受けていない</button>
+        <button class="choice-btn" data-key="loan" data-val="事前審査通過" onclick="pick(this,'btn-5')">事前審査を受けた（通過）</button>
+        <button class="choice-btn" data-key="loan" data-val="事前審査否決・条件付き" onclick="pick(this,'btn-5')">事前審査を受けた（否決・条件付き）</button>
+        <button class="choice-btn" data-key="loan" data-val="目処がついている" onclick="pick(this,'btn-5')">すでに目処がついている</button>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="btn-next" id="btn-5" disabled onclick="goTo(6)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== STEP 6：気になること（複数選択） ========== -->
+  <div class="screen" id="screen-6">
+    <div class="header">
+      <div class="header-icon">🏠</div>
+      <div class="header-name">それでも家を建てた、<br>アラサー会社員の話</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>6 / 8</span><span>75%</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:75%"></div></div>
+    </div>
+    <div class="body">
+      <p class="question-label">今、気になっていることは？</p>
+      <span class="question-note">複数選んでOKです</span>
+      <div class="choices" id="concern-group">
+        <button class="choice-btn multi" data-key="concern" data-val="住宅ローン・返済計画" onclick="pickMulti(this,'btn-6')">住宅ローン・返済計画</button>
+        <button class="choice-btn multi" data-key="concern" data-val="工務店・ハウスメーカーの選び方" onclick="pickMulti(this,'btn-6')">工務店・ハウスメーカーの選び方</button>
+        <button class="choice-btn multi" data-key="concern" data-val="建物の性能（断熱・気密・耐震）" onclick="pickMulti(this,'btn-6')">建物の性能（断熱・気密・耐震）</button>
+        <button class="choice-btn multi" data-key="concern" data-val="予算内に収まるか" onclick="pickMulti(this,'btn-6')">予算内に収まるか</button>
+        <button class="choice-btn multi" data-key="concern" data-val="間取りの考え方" onclick="pickMulti(this,'btn-6')">間取りの考え方</button>
+        <button class="choice-btn multi" data-key="concern" data-val="今建てるタイミング" onclick="pickMulti(this,'btn-6')">今建てるタイミングが正しいか</button>
+        <button class="choice-btn multi" data-key="concern" data-val="担当者・工務店の信頼性" onclick="pickMulti(this,'btn-6')">担当者・工務店が信用できるか</button>
+        <button class="choice-btn multi" data-key="concern" data-val="夫婦・家族の意思決定" onclick="pickMulti(this,'btn-6')">夫婦・家族での意思決定</button>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="btn-next" id="btn-6" disabled onclick="goTo(7)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== STEP 7：お名前・メール・相談内容 ========== -->
+  <div class="screen" id="screen-7">
+    <div class="header">
+      <div class="header-icon">🏠</div>
+      <div class="header-name">それでも家を建てた、<br>アラサー会社員の話</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>7 / 8</span><span>88%</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:88%"></div></div>
+    </div>
+    <div class="body">
+      <p class="question-label">最後に連絡先を教えてください</p>
+      <span class="question-note">回答後にメールで返信します</span>
+      <div class="input-group">
+        <div>
+          <input type="text" class="text-input" id="inp-name" placeholder="お名前（ニックネーム可）" autocomplete="name" oninput="checkStep7()">
+          <span class="field-error" id="err-name">入力してください</span>
+        </div>
+        <div>
+          <input type="email" class="text-input" id="inp-email" placeholder="メールアドレス" autocomplete="email" oninput="checkStep7()">
+          <span class="field-error" id="err-email">正しいメールアドレスを入力してください</span>
+        </div>
+        <div>
+          <textarea class="text-input" id="inp-message" placeholder="相談したいこと・状況の詳細（任意）&#10;例：工務店を3社に絞ったが判断できず迷っています。" rows="4" oninput="checkStep7()"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="btn-next" id="btn-7" disabled onclick="submitForm()">送信する →</button>
+    </div>
+  </div>
+
+  <!-- ========== STEP 8：完了 ========== -->
+  <div class="screen" id="screen-8">
+    <div class="header">
+      <div class="header-icon">🏠</div>
+      <div class="header-name">それでも家を建てた、<br>アラサー会社員の話</div>
+    </div>
+    <div class="complete-body">
+      <div class="complete-icon">🎁</div>
+      <h2>ありがとうございます！<br>回答が完了しました</h2>
+      <p>
+        内容を確認してご連絡します。<br>
+        まずはお約束のチェックリストを受け取ってください。
+      </p>
+      <a class="btn-cta" href="https://ie-wo-tateta.github.io/soredemo-ie/checklist.html" target="_blank">
+        📋 チェックリストを受け取る →
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const answers = {};
+
+    /* 画面遷移 */
+    function goTo(n) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + n).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    /* 単一選択 */
+    function pick(btn, nextId) {
+      btn.closest('.choices').querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      answers[btn.dataset.key] = btn.dataset.val;
+      document.getElementById(nextId).disabled = false;
+    }
+
+    /* 複数選択 */
+    function pickMulti(btn, nextId) {
+      btn.classList.toggle('selected');
+      const selected = [...btn.closest('.choices').querySelectorAll('.selected')]
+        .map(b => b.dataset.val);
+      answers['concern'] = selected;
+      document.getElementById(nextId).disabled = selected.length === 0;
+    }
+
+    /* 都道府県 */
+    function onPref() {
+      const val = document.getElementById('pref-select').value;
+      answers['area'] = val;
+      document.getElementById('btn-2').disabled = !val;
+    }
+
+    /* 世帯構成「その他」 */
+    function toggleOther(wrapId, btn) {
+      const wrap = document.getElementById(wrapId);
+      const isOther = btn.dataset.val === 'その他';
+      if (isOther) {
+        wrap.classList.add('visible');
+        setTimeout(() => document.getElementById('familyOtherText').focus(), 50);
+      } else {
+        wrap.classList.remove('visible');
+      }
+    }
+    function onFamilyOther() {
+      const val = document.getElementById('familyOtherText').value.trim();
+      if (val) answers['family_other'] = val;
+    }
+
+    /* STEP7 バリデーション */
+    function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+    function checkStep7() {
+      const name  = document.getElementById('inp-name').value.trim();
+      const email = document.getElementById('inp-email').value.trim();
+      document.getElementById('btn-7').disabled = !(name && isEmail(email));
+    }
+
+    /* 送信 */
+    async function submitForm() {
+      const name  = document.getElementById('inp-name').value.trim();
+      const email = document.getElementById('inp-email').value.trim();
+
+      /* 簡易バリデーション */
+      let ok = true;
+      if (!name) {
+        document.getElementById('err-name').style.display = 'block';
+        document.getElementById('inp-name').classList.add('invalid');
+        ok = false;
+      }
+      if (!isEmail(email)) {
+        document.getElementById('err-email').style.display = 'block';
+        document.getElementById('inp-email').classList.add('invalid');
+        ok = false;
+      }
+      if (!ok) return;
+
+      answers['name']    = name;
+      answers['email']   = email;
+      answers['message'] = document.getElementById('inp-message').value.trim();
+      answers['source']  = 'LINE初回アンケート';
+      answers['submitted_at'] = new Date().toISOString();
+
+      document.getElementById('btn-7').disabled = true;
+      document.getElementById('btn-7').textContent = '送信中...';
+
+      /* ============================================================
+         送信先エンドポイントを設定する
+         Formspree: https://formspree.io でフォームを作成してURLを設定
+      ============================================================ */
+      const ENDPOINT = 'YOUR_FORMSPREE_ENDPOINT';
+
+      try {
+        if (ENDPOINT !== 'YOUR_FORMSPREE_ENDPOINT') {
+          const body = { ...answers, concern: Array.isArray(answers.concern) ? answers.concern.join('、') : '' };
+          await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(body),
+          });
+        } else {
+          console.log('送信データ（開発確認用）:', answers);
+        }
+      } catch (e) {
+        console.error('送信エラー:', e);
+      }
+
+      goTo(8);
+    }
+  </script>
+</body>
+</html>
