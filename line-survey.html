@@ -577,7 +577,7 @@
         内容を確認してご連絡します。<br>
         まずはお約束のチェックリストを受け取ってください。
       </p>
-      <a class="btn-cta" href="https://ie-wo-tateta.github.io/soredemo-ie/checklist.html" target="_blank">
+      <a class="btn-cta" href="https://y0u9h1e7i-commits.github.io/soredemo-ie/checklist.html" target="_blank">
         📋 チェックリストを受け取る →
       </a>
     </div>
@@ -673,18 +673,17 @@
          送信先エンドポイントを設定する
          Formspree: https://formspree.io でフォームを作成してURLを設定
       ============================================================ */
-      const ENDPOINT = 'YOUR_FORMSPREE_ENDPOINT';
+      const ENDPOINT = 'https://formspree.io/f/xdajnzzy';
 
       try {
-        if (ENDPOINT !== 'YOUR_FORMSPREE_ENDPOINT') {
-          const body = { ...answers, concern: Array.isArray(answers.concern) ? answers.concern.join('、') : '' };
-          await fetch(ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify(body),
-          });
-        } else {
-          console.log('送信データ（開発確認用）:', answers);
+        const body = { ...answers, concern: Array.isArray(answers.concern) ? answers.concern.join('、') : '' };
+        await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(body),
+        });
+        {
+          console.log('送信完了:', answers);
         }
       } catch (e) {
         console.error('送信エラー:', e);
